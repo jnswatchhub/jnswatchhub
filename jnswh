@@ -1,0 +1,2031 @@
+<html><head><base href="https://moviesapi.club/movie/533535/index.html">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JNS Watch Hub - Streaming Movies and TV Shows</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4.1.1/dist/tesseract.min.js"></script>
+  <style>
+    .payment-modal {
+      max-width: 500px;
+      text-align: center;
+      background: linear-gradient(145deg, #232323, #1a1a1a);
+    }
+
+    .payment-details {
+      padding: 20px;
+    }
+
+    /* Remove .gcash-qr styles since we're removing QR code */
+
+    .payment-instructions {
+      text-align: left;
+      margin: 20px 0;
+      padding: 20px;
+      background: rgba(255,255,255,0.1);
+      border-radius: 8px;
+      line-height: 1.8;
+    }
+
+    .instruction-step {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 15px;
+      gap: 15px;
+    }
+
+    .step-number {
+      background: var(--primary-color);
+      color: white;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      flex-shrink: 0;
+    }
+
+    .step-content {
+      flex: 1;
+    }
+
+    .step-highlight {
+      color: var(--primary-color);
+      font-weight: bold;
+      display: inline-block;
+      margin: 5px 0;
+    }
+
+    .sample-screenshots {
+      display: flex;
+      gap: 10px;
+      margin-top: 10px;
+      justify-content: center;
+    }
+
+    .screenshot-example {
+      max-width: 200px;
+      height: auto;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+
+    .payment-btn {
+      background: linear-gradient(45deg, #00A1E4, #0077B6);
+      color: white;
+      border: none;
+      padding: 15px 40px;
+      border-radius: 25px;
+      font-size: 18px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 20px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .payment-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(0, 161, 228, 0.5);
+    }
+
+    .screenshot-upload {
+      margin: 20px 0;
+      text-align: center;
+    }
+
+    .upload-btn {
+      background: linear-gradient(45deg, #00A1E4, #0077B6);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 25px;
+      cursor: pointer;
+      display: inline-block;
+      transition: all 0.3s ease;
+    }
+
+    .upload-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 15px rgba(0, 161, 228, 0.4);
+    }
+
+    #uploadPreview {
+      margin-top: 15px;
+      max-width: 300px;
+      margin: 15px auto;
+    }
+
+    #uploadPreview img {
+      max-width: 100%;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+
+    .payment-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    :root {
+      --primary-color: #e50914;
+      --background-color: #141414;
+      --secondary-color: #232323;
+      --text-color: #fff;
+    }
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: var(--background-color);
+      color: var(--text-color);
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    header {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+    .header-top {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      margin-bottom: -120px;
+    }
+    @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap');
+
+    .site-title {
+      font-family: 'Orbitron', sans-serif;
+      font-size: 2.5rem;
+      color: #e50914;
+      text-shadow: 0 0 10px rgba(229, 9, 20, 0.5);
+      margin: 0;
+      padding: 120px 0;
+      text-align: center;
+      display: block;
+      background: linear-gradient(45deg, #e50914, #b20710);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 2px;
+      cursor: pointer;
+    }
+    .search-container {
+      display: flex;
+      margin-bottom: 30px;
+    }
+    #searchInput {
+      flex-grow: 1;
+      padding: 10px;
+      font-size: 1rem;
+      border: none;
+      border-radius: 5px 0 0 5px;
+    }
+    #searchButton {
+      padding: 10px 20px;
+      font-size: 1rem;
+      background-color: var(--primary-color);
+      color: var(--text-color);
+      border: none;
+      cursor: pointer;
+      border-radius: 0 5px 5px 0;
+    }
+    .media-section {
+      margin-bottom: 40px;
+    }
+    .media-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+    }
+    .media-item {
+      position: relative;
+      overflow: hidden;
+      border-radius: 5px;
+      transition: transform 0.3s ease;
+      cursor: pointer;
+    }
+    .media-item:hover {
+      transform: scale(1.05);
+    }
+    .media-item img {
+      width: 100%;
+      height: auto;
+    }
+    .media-info {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.7);
+      padding: 10px;
+      transform: translateY(100%);
+      transition: transform 0.3s ease;
+    }
+    .media-item:hover .media-info {
+      transform: translateY(0);
+    }
+    .media-title {
+      margin: 0;
+      font-size: 1rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .media-rating {
+      font-size: 0.9rem;
+      color: #ffd700;
+      margin: 5px 0;
+    }
+    .media-details {
+      font-size: 0.8rem;
+      margin: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 1;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      overflow: auto;
+      background-color: rgba(0,0,0,0.4);
+    }
+    .modal-content {
+      background: linear-gradient(to bottom, #232323, #141414);
+      margin: 5% auto;
+      padding: 30px;
+      border: 1px solid #888;
+      width: 90%;
+      max-width: 1200px;
+      border-radius: 5px;
+      color: var(--text-color);
+      box-shadow: 0 0 20px rgba(0,0,0,0.5);
+    }
+
+    .modal-content h2 {
+      color: var(--primary-color);
+      font-size: 2rem;
+      margin-bottom: 20px;
+      font-weight: 700;
+    }
+
+    .modal-content p {
+      line-height: 1.6;
+      margin-bottom: 15px;
+      font-size: 1.1rem;
+    }
+
+    .video-button {
+      background: linear-gradient(45deg, var(--primary-color), #b20710);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      margin: 10px;
+      border-radius: 5px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .video-button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(229, 9, 20, 0.3);
+    }
+
+    .season-episode-controls {
+      display: flex;
+      gap: 15px;
+      margin: 20px 0;
+      flex-wrap: wrap;
+    }
+
+    select {
+      background-color: #333;
+      color: white;
+      padding: 10px;
+      border: 1px solid #666;
+      border-radius: 5px;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    select:focus {
+      outline: none;
+      border-color: var(--primary-color);
+    }
+
+    .media-details-container {
+      background: rgba(0,0,0,0.2);
+      padding: 20px;
+      border-radius: 10px;
+      margin: 20px 0;
+    }
+
+    .media-meta {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      margin: 15px 0;
+    }
+
+    .meta-item {
+      background: rgba(255,255,255,0.1);
+      padding: 8px 15px;
+      border-radius: 20px;
+      font-size: 0.9rem;
+    }
+    .close {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+    .close:hover,
+    .close:focus {
+      color: var(--text-color);
+      text-decoration: none;
+      cursor: pointer;
+    }
+    #mediaInfo {
+      margin-top: 20px;
+      padding: 20px;
+      background-color: #333;
+      border-radius: 5px;
+    }
+    footer {
+      text-align: center;
+      padding: 20px 0;
+      color: var(--text-color);
+      font-size: 14px;
+      font-weight: bold;
+    }
+    .video-container {
+      position: relative;
+      padding-bottom: 56.25%;
+      height: 0;
+      overflow: hidden;
+    }
+    .video-container iframe {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+    }
+    .sidebar {
+      position: fixed;
+      left: -250px;
+      top: 0;
+      height: 100%;
+      width: 250px;
+      background-color: var(--secondary-color);
+      transition: left 0.3s ease;
+      z-index: 2;
+      padding-top: 60px;
+      box-shadow: 2px 0 5px rgba(0,0,0,0.3);
+    }
+    .sidebar.open {
+      left: 0;
+    }
+    .sidebar-toggle {
+      position: fixed;
+      left: 20px;
+      top: 20px;
+      z-index: 3;
+      background: var(--primary-color);
+      border: none;
+      color: var(--text-color);
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .genre-list {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      max-height: calc(100vh - 80px);
+      overflow-y: auto;
+      scrollbar-width: thin;
+    }
+    .genre-list::-webkit-scrollbar {
+      width: 6px;
+    }
+    .genre-list::-webkit-scrollbar-track {
+      background: var(--secondary-color);
+    }
+    .genre-list::-webkit-scrollbar-thumb {
+      background: #666;
+      border-radius: 3px;
+    }
+    .genre-item {
+      padding: 15px 20px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    .genre-item:hover {
+      background-color: #333;
+    }
+    .genre-header {
+      padding: 15px 20px;
+      font-weight: bold;
+      color: var(--primary-color);
+      background-color: #1a1a1a;
+      text-transform: uppercase;
+      font-size: 0.9em;
+      letter-spacing: 1px;
+    }
+    @media (max-width: 768px) {
+      .container {
+        margin: 0 20px;
+        padding: 10px;
+      }
+      .media-grid {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        gap: 10px;
+      }
+      .search-container {
+        flex-direction: column;
+      }
+      #searchInput, #searchButton {
+        width: 100%;
+        border-radius: 5px;
+        margin: 5px 0;
+      }
+      .modal-content {
+        margin: 2% auto;
+        width: 95%;
+        padding: 10px;
+      }
+    }
+  /* Auth Styles */
+  .user-welcome {
+    color: var(--primary-color);
+    font-weight: 700;
+    background: linear-gradient(45deg, #e50914, #ff9a44);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    padding: 8px 15px;
+    border-radius: 20px;
+    font-size: 1.1em;
+    letter-spacing: 1px;
+    text-transform: capitalize;
+    font-family: 'Roboto', sans-serif;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-right: 2px;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    animation: welcomeGlow 2s ease-in-out infinite;
+  }
+
+  .user-welcome::before {
+    content: '👑';
+    font-size: 1.2em;
+  }
+
+  @keyframes welcomeGlow {
+    0%, 100% { filter: drop-shadow(0 0 2px rgba(229, 9, 20, 0.5)); }
+    50% { filter: drop-shadow(0 0 5px rgba(229, 9, 20, 0.8)); }
+  }
+
+  #signOutBtn {
+    background: transparent;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    padding: 5px 5px;
+    border-radius: 20px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    letter-spacing: 1px;
+  }
+
+  #signOutBtn:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(229, 9, 20, 0.3);
+  }
+
+  .auth-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.8);
+  }
+
+  .auth-form {
+    background: var(--secondary-color);
+    margin: 10% auto;
+    padding: 30px;
+    width: 90%;
+    max-width: 400px;
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0,0,0,0.5);
+  }
+
+  .auth-form h2 {
+    color: var(--primary-color);
+    text-align: center;
+    margin-bottom: 30px;
+  }
+
+  .auth-form .inputbox {
+    position: relative;
+    margin-bottom: 30px;
+  }
+
+  .auth-form input[type="text"],
+  .auth-form input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    background: rgba(255,255,255,0.1);
+    border: none;
+    border-bottom: 2px solid var(--primary-color);
+    color: white;
+    font-size: 16px;
+  }
+
+  .auth-form .submit-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+
+  .auth-toggle {
+    text-align: center;
+    margin-top: 20px;
+    color: #aaa;
+  }
+
+  .auth-toggle span {
+    color: var(--primary-color);
+    cursor: pointer;
+  }
+
+  .auth-nav {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+  }
+
+  .auth-nav button {
+    background: transparent;
+    border: -10px solid #007bff;
+    color: #ca0a0a;
+    padding: 8px 16px;
+    margin-left: -5px;
+    cursor: pointer;
+    border-radius: 4px;
+  }
+
+  .pricing-button {
+    position: absolute;
+    left: 20px;
+    top: 70px;
+    z-index: 3;
+    background: var(--primary-color);
+    border: none;
+    color: var(--text-color);
+    padding: 5px 10px;
+    border-radius: 5px;
+    cursor: pointer;
+    animation: glow 2s ease-in-out infinite;
+}
+
+  @keyframes glow {
+    0%, 100% { box-shadow: 0 0 5px rgba(229, 9, 20, 0.5); }
+    50% { box-shadow: 0 0 20px rgba(229, 9, 20, 0.8); }
+  }
+
+  .subscription-modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.9);
+    overflow-y: auto;
+  }
+
+  .subscription-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 30px;
+    padding: 50px 20px;
+    max-width: 1200px;
+    margin: 50px auto;
+  }
+
+  .subscription-plan {
+    background: linear-gradient(145deg, #232323, #1a1a1a);
+    border-radius: 15px;
+    padding: 30px;
+    width: 300px;
+    text-align: center;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    transform: translateY(0);
+    transition: all 0.3s ease;
+  }
+
+  .subscription-plan:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(229, 9, 20, 0.3);
+  }
+
+  .plan-name {
+    font-size: 24px;
+    color: var(--primary-color);
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+
+  .plan-price {
+    font-size: 48px;
+    color: white;
+    margin: 20px 0;
+    text-shadow: 0 0 10px rgba(229, 9, 20, 0.5);
+  }
+
+  .plan-price span {
+    font-size: 20px;
+  }
+
+  .subscribe-btn {
+    background: linear-gradient(45deg, var(--primary-color), #b20710);
+    color: white;
+    border: none;
+    padding: 15px 40px;
+    border-radius: 25px;
+    font-size: 18px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 20px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .subscribe-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 20px rgba(229, 9, 20, 0.5);
+  }
+
+  .subscribe-btn::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: rgba(255,255,255,0.1);
+    transform: rotate(45deg);
+    animation: shine 3s infinite;
+  }
+
+  @keyframes shine {
+    0% { transform: translateX(-100%) rotate(45deg); }
+    100% { transform: translateX(100%) rotate(45deg); }
+  }
+
+  .modal-close {
+    position: absolute;
+    right: 30px;
+    top: 30px;
+    font-size: 30px;
+    color: white;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .modal-close:hover {
+    color: var(--primary-color);
+    transform: rotate(90deg);
+  }
+
+  /* Account Management Styles */
+    .account-page-modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.9);
+      overflow-y: auto;
+    }
+
+    .user-list, .subscription-list {
+      background: rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 15px;
+      margin: 10px 0;
+    }
+
+    .user-item, .subscription-item {
+      background: rgba(0,0,0,0.3);
+      padding: 15px;
+      margin: 10px 0;
+      border-radius: 4px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .user-details, .subscription-details {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+    }
+
+    .admin-actions {
+      display: flex;
+      gap: 10px;
+    }
+
+    .admin-btn {
+      background: var(--primary-color);
+      color: white;
+      border: none;
+      padding: 5px 10px;
+    border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .admin-btn:hover {
+      opacity: 0.8;
+    }
+
+    .admin-btn.delete {
+      background: #dc3545;
+    }
+
+
+  .account-container {
+    background: linear-gradient(145deg, #232323, #1a1a1a);
+    margin: 5% auto;
+    padding: 30px;
+    width: 90%;
+    max-width: 800px;
+    border-radius: 15px;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+  }
+
+  .account-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #9b09e5;
+  }
+
+  .subscription-info {
+    background: rgba(255,255,255,0.1);
+    padding: 25px;
+    border-radius: 10px;
+    margin: 20px 0;
+  }
+
+  .subscription-status {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-weight: bold;
+    margin: 10px 0;
+  }
+
+  .status-active {
+    background: #4CAF50;
+    color: white;
+  }
+
+  .status-expired {
+    background: #f44336;
+    color: white;
+  }
+
+  .account-section {
+    margin: 20px 0;
+  }
+
+  .account-section h3 {
+    color: #093f97;
+    margin-bottom: 15px;
+  }
+
+  .payment-scanner {
+    margin: 20px 0;
+    padding: 20px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 8px;
+  }
+
+  .scan-result {
+    margin-top: 15px;
+    padding: 10px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 5px;
+  }
+
+  .loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #f3f3f3;
+    border-top: 4px solid #e50914;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin: 0 auto;
+    display: none;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  </style>
+</head>
+<body>
+  <button class="sidebar-toggle">☰ Categories</button>
+  <button class="pricing-button">💎 Pricing</button>
+  <div class="sidebar">
+    <ul class="genre-list" id="genreList"></ul>
+  </div>
+  <div class="container">
+    <div class="auth-nav">
+      <button id="loginBtn">Sign In</button>
+      <button id="registerBtn">Sign Up</button>
+    </div>
+    <header>
+      <div class="header-top">
+        <h1 class="site-title">JNS Watch Hub</h1>
+      </div>
+    </header>
+
+    <div class="search-container">
+      <input type="text" id="searchInput" placeholder="Search for movies or TV shows...">
+      <button id="searchButton">Search</button>
+    </div>
+
+    <section class="media-section">
+      <div id="mediaGrid" class="media-grid"></div>
+    </section>
+  </div>
+
+  <div id="playerModal" class="modal">
+    <div class="modal-content">
+      <span class="close">&times;</span>
+      <div class="video-container">
+        <iframe id="player" frameborder="0" allowfullscreen></iframe>
+      </div>
+      <div id="mediaInfo"></div>
+    </div>
+  </div>
+
+  <div id="loginModal" class="auth-modal">
+    <div class="auth-form">
+      <h2>Sign In</h2>
+      <form id="loginForm">
+        <div class="inputbox">
+          <input type="text" id="loginUsername" required>
+          <span>Username</span>
+        </div>
+        <div class="inputbox">
+          <input type="password" id="loginPassword" required>
+          <span>Password</span>
+        </div>
+        <button type="submit" class="submit-btn">Sign In</button>
+      </form>
+      <div class="auth-toggle">
+        Don't have an account? <span id="showRegister">Sign Up</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="registerModal" class="auth-modal">
+    <div class="auth-form">
+      <h2>Sign Up</h2>
+      <form id="registerForm">
+        <div class="inputbox">
+          <input type="text" id="registerUsername" required>
+          <span>Username</span>
+        </div>
+        <div class="inputbox">
+          <input type="password" id="registerPassword" required>
+          <span>Password</span>
+        </div>
+        <button type="submit" class="submit-btn">Sign Up</button>
+      </form>
+      <div class="auth-toggle">
+        Already have an account? <span id="showLogin">Sign In</span>
+      </div>
+    </div>
+  </div>
+
+  <div id="subscriptionModal" class="subscription-modal">
+    <span class="modal-close">&times;</span>
+    <div class="subscription-container">
+      <div class="subscription-plan">
+        <h2 class="plan-name">Daily Pass</h2>
+        <div class="plan-price">₱5<span>/day</span></div>
+        <button class="subscribe-btn">Subscribe Now</button>
+      </div>
+      
+      <div class="subscription-plan">
+        <h2 class="plan-name">Weekly Pass</h2>
+        <div class="plan-price">₱35<span>/week</span></div>
+        <button class="subscribe-btn">Subscribe Now</button>
+      </div>
+      
+      <div class="subscription-plan">
+        <h2 class="plan-name">Monthly Pass</h2>
+        <div class="plan-price">₱100<span>/month</span></div>
+        <button class="subscribe-btn">Subscribe Now</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="gcashPaymentModal" class="modal">
+    <div class="modal-content payment-modal">
+      <span class="close">&times;</span>
+      <h2>GCash Payment</h2>
+      <div class="payment-details">
+        <p>Selected Plan: <span id="selectedPlan"></span></p>
+        <p>Amount: <span id="selectedAmount"></span></p>
+      <!-- Remove QR code related content -->
+      
+        <div class="payment-instructions">
+        <div class="instruction-step">
+          <span class="step-number">1</span>
+          <div class="step-content">Open your GCash app</div>
+        </div>
+        
+        <div class="instruction-step">
+          <span class="step-number">2</span>
+          <div class="step-content">
+            Send payment to GCash number: 
+            <span class="step-highlight">09560748741</span>
+          </div>
+        </div>
+        
+        <div class="instruction-step">
+          <span class="step-number">3</span>
+          <div class="step-content">
+            Verify payee name should show as: 
+            <span class="step-highlight">LE...L C.</span>
+          </div>
+        </div>
+        
+        <div class="instruction-step">
+          <span class="step-number">4</span>
+          <div class="step-content">Enter the exact amount</div>
+        </div>
+        
+        <div class="instruction-step">
+          <span class="step-number">5</span>
+          <div class="step-content">
+            Take screenshots of:
+            <div class="sample-screenshots">
+              <img src="/a/3c65d8cc-ffe1-464d-9d62-e20badb9017a" 
+                   alt="Sample transactions tab screenshot" 
+                   class="screenshot-example"
+                   width="200"
+                   height="400">
+              <img src="/a/698a8a86-a056-4e13-86d6-96c8616711f9" 
+                   alt="Sample transaction details screenshot" 
+                   class="screenshot-example"
+                   width="200"
+                   height="400">
+            </div>
+          </div>
+        </div>
+        
+        <div class="instruction-step">
+          <span class="step-number">6</span>
+          <div class="step-content">Upload your payment screenshot below</div>
+        </div>
+      </div>
+
+
+      <div class="screenshot-upload">
+        <label for="paymentScreenshot" class="upload-btn">
+          Upload Payment Screenshot
+          <input type="file" id="paymentScreenshot" accept="image/*" style="display: none;">
+        </label>
+        <div id="uploadPreview"></div>
+        <div class="payment-scanner">
+          <div class="loading-spinner" id="scanSpinner"></div>
+          <div class="scan-result" id="scanResult"></div>
+          <p class="upload-instructions">
+            The system will verify your payment details through OCR scanning.
+          </p>
+        </div>
+      </div>
+
+      <button id="confirmPaymentBtn" class="payment-btn" disabled>Confirm Payment</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="accountModal" class="account-page-modal">
+    <div class="account-container">
+      <div class="account-header">
+        <h2>Account Management</h2>
+        <span class="modal-close">&times;</span>
+      </div>
+      
+      <div class="account-section">
+        <h3>Profile Information</h3>
+        <p><strong>Username:</strong> <span id="profileUsername"></span></p>
+      </div>
+
+      <div class="account-section">
+        <h3>Subscription Details</h3>
+        <div class="subscription-info">
+          <p><strong>Current Plan:</strong> <span id="currentPlan">-</span></p>
+          <p><strong>Status:</strong> <span id="subscriptionStatus"></span></p>
+          <p><strong>Expires:</strong> <span id="subscriptionExpiry">-</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getDatabase, ref, set, get, child, onValue, off, update } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-database.js";
+    import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-storage.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDkN_hWAqlSzbfNTDlntRtW-3TFBISjiC4",
+      authDomain: "jns-movie-hub.firebaseapp.com", 
+      databaseURL: "https://jns-movie-hub-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "jns-movie-hub",
+      storageBucket: "jns-movie-hub.appspot.com",
+      messagingSenderId: "736875037088",
+      appId: "1:736875037088:web:edda79d22461a77c2b24c5",
+      measurementId: "G-ED5YM81XTF"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    const CONFIG = {
+      apiKeys: {
+        tmdb: 'b2496ed57cdbfafa83046256d56f9f02'
+      },
+      urls: {
+        tmdb: {
+          base: 'https://api.themoviedb.org/3',
+          images: 'https://image.tmdb.org/t/p/w500'
+        },
+        videoServers: {
+          server1: {
+            base: 'https://vidsrc.icu/embed',
+            moviePath: '/movie/',
+            tvPath: '/tv/'
+          },
+          server2: {
+            base: 'https://moviesapi.club',
+            moviePath: '/movie/',
+            tvPath: '/tv/'
+          }
+        }
+      },
+      defaultLanguage: 'en-US',
+      gridSettings: {
+        mobileBreakpoint: 768,
+        defaultPageSize: 20
+      },
+      styling: {
+        colors: {
+          primary: '#e50914',
+          background: '#141414',
+          secondary: '#232323',
+          text: '#fff'
+        }
+      }
+    };
+
+    let currentMediaType = 'movie';
+    let currentPage = 1;
+    let isLoading = false;
+    let displayedMediaIds = new Set();
+    let isSearchMode = false;
+    let currentUser = null;
+
+    function generateSessionId(length = 32) {
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+      let result = '';
+      for (let i = 0; i < length; i++) {
+        result += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return result;
+    }
+
+    async function loginUser(username, password) {
+      const userSnapshot = await get(child(ref(db), 'users/' + username));
+      
+      if (userSnapshot.exists() && userSnapshot.val().password === password) {
+        const sessionSnapshot = await get(child(ref(db), `sessions/${username}`));
+        
+        if (sessionSnapshot.exists()) {
+          const lastActive = sessionSnapshot.val().lastActive;
+          const SESSION_TIMEOUT = 24 * 60 * 60 * 1000; 
+          
+          if (Date.now() - lastActive < SESSION_TIMEOUT) {
+            alert('You are already logged in on another device. Please log out from other devices first.');
+            return;
+          }
+        }
+        
+        const sessionId = generateSessionId();
+        await set(ref(db, `sessions/${username}`), {
+          sessionId: sessionId,
+          lastActive: Date.now()
+        });
+        
+        currentUser = username;
+        updateAuthButtons();
+        document.getElementById('loginModal').style.display = 'none';
+        document.getElementById('loginUsername').value = '';
+        document.getElementById('loginPassword').value = '';
+      } else {
+        alert('Invalid username or password');
+      }
+    }
+
+    function signOut() {
+      if (currentUser) {
+        set(ref(db, `sessions/${currentUser}`), null)
+          .then(() => {
+            currentUser = null;
+            updateAuthButtons();
+          })
+          .catch(error => {
+            console.error('Error removing session:', error);
+          });
+      }
+    }
+
+    function updateLastActive() {
+      if (currentUser) {
+        const updates = {};
+        updates[`sessions/${currentUser}/lastActive`] = Date.now();
+        update(ref(db), updates).catch(console.error);
+      }
+    }
+
+    setInterval(updateLastActive, 5 * 60 * 1000);
+
+    window.addEventListener('beforeunload', () => {
+      if (currentUser) {
+        const data = JSON.stringify({ username: currentUser });
+        navigator.sendBeacon('/api/logout', data);
+        
+        const updates = {};
+        updates[`sessions/${currentUser}`] = null;
+        update(ref(db), updates);
+      }
+    });
+
+    async function fetchTMDBData(endpoint, params = {}) {
+      const url = new URL(`${CONFIG.urls.tmdb.base}${endpoint}`);
+      url.searchParams.append('api_key', CONFIG.apiKeys.tmdb);
+      url.searchParams.append('language', CONFIG.defaultLanguage);
+      Object.keys(params).forEach(key => url.searchParams.append(key, params[key]));
+
+      const response = await fetch(url);
+      return response.json();
+    }
+
+    async function loadPopularMedia() {
+      if (isLoading || isSearchMode) return;
+      isLoading = true;
+
+      try {
+        const popularMedia = await fetchTMDBData(`/${currentMediaType}/popular`, { page: currentPage });
+        displayMedia(popularMedia.results, 'mediaGrid', currentMediaType, currentPage === 1);
+        currentPage++;
+      } catch (error) {
+        console.error(`Error loading popular ${currentMediaType}:`, error);
+      } finally {
+        isLoading = false;
+      }
+    }
+
+    function displayMedia(mediaList, containerId, mediaType, clearContainer = false) {
+      const container = document.getElementById(containerId);
+      if (clearContainer) {
+        container.innerHTML = '';
+        displayedMediaIds.clear();
+      }
+
+      mediaList.forEach(item => {
+        if (!displayedMediaIds.has(item.id)) {
+          displayedMediaIds.add(item.id);
+
+          const mediaItem = document.createElement('div');
+          mediaItem.className = 'media-item';
+          mediaItem.innerHTML = `
+            <img src="${CONFIG.urls.tmdb.images}${item.poster_path}" alt="${item.title || item.name}">
+            <div class="media-info">
+              <h3 class="media-title">${item.title || item.name}</h3>
+              <p class="media-rating">
+                ⭐ ${item.vote_average.toFixed(1)}
+              </p>
+            </div>
+          `;
+          mediaItem.addEventListener('click', () => openMediaDetails(item.id, item.media_type || (mediaType === 'multi' ? (item.title ? 'movie' : 'tv') : mediaType)));
+          container.appendChild(mediaItem);
+        }
+      });
+    }
+
+    async function checkUserSubscription() {
+      if (!currentUser) return false;
+      
+      try {
+        const snapshot = await get(child(ref(db), `subscriptions/${currentUser}`));
+        if (!snapshot.exists()) return false;
+        
+        const subscription = snapshot.val();
+        const now = Date.now();
+        
+        if (now > subscription.expirationTime) {
+          await set(ref(db, `subscriptions/${currentUser}/status`), 'expired');
+          return false;
+        }
+        
+        return subscription.status === 'active';
+      } catch (error) {
+        console.error('Error checking subscription:', error);
+        return false;
+      }
+    }
+
+    function startSubscriptionCheck() {
+      setInterval(async () => {
+        if (currentUser) {
+          await checkUserSubscription();
+        }
+      }, 60000); 
+    }
+
+    async function openMediaDetails(id, mediaType) {
+      const type = mediaType || 'movie';
+      
+      try {
+        const isSubscribed = await checkUserSubscription();
+        const mediaDetails = await fetchTMDBData(`/${type}/${id}`);
+
+        const modalContent = document.querySelector('.modal-content');
+        
+        if (!isSubscribed) {
+          modalContent.innerHTML = `
+            <span class="close">&times;</span>
+            <div class="media-details-container" style="text-align: center;">
+              <h2 style="color: var(--primary-color); margin-bottom: 20px;">Subscribe to Watch</h2>
+              <p>Please subscribe to access our full library of content.</p>
+              <button class="video-button" onclick="document.getElementById('subscriptionModal').style.display='block';" style="margin-top: 20px;">
+                View Subscription Plans
+              </button>
+            </div>
+          `;
+        } else {
+          modalContent.innerHTML = `
+            <span class="close">&times;</span>
+            <h2>${mediaDetails.title || mediaDetails.name}</h2>
+            <div class="media-details-container">
+              <p>${mediaDetails.overview}</p>
+              <div class="media-meta">
+                <span class="meta-item">⭐ ${mediaDetails.vote_average}/10</span>
+                <span class="meta-item">📅 ${mediaDetails.release_date || mediaDetails.first_air_date}</span>
+                <span class="meta-item">🎭 ${mediaDetails.genres.map(genre => genre.name).join(', ')}</span>
+              </div>
+            </div>
+            ${type === 'movie' ? `
+              <div class="button-container">
+                <button id="playMovieButtonServer1" class="video-button">▶ Watch on Server 1</button>
+                <button id="playMovieButtonServer2" class="video-button">▶ Watch on Server 2</button>
+              </div>
+            ` : `
+              <div id="seasonEpisodeSelector" class="season-episode-controls"></div>
+            `}
+          `;
+
+          if (type === 'tv') {
+            await loadSeasonEpisodeSelector(id, mediaDetails);
+          } else if (type === 'movie') {
+            const playMovieButtonServer1 = document.getElementById('playMovieButtonServer1');
+            const playMovieButtonServer2 = document.getElementById('playMovieButtonServer2');
+
+            playMovieButtonServer1.addEventListener('click', () => {
+              const url = getVideoUrl('movie', mediaDetails).server1;
+              loadVideo(url, mediaDetails);
+            });
+
+            playMovieButtonServer2.addEventListener('click', () => {
+              const url = getVideoUrl('movie', mediaDetails).server2;
+              loadVideo(url, mediaDetails);
+            });
+          }
+        }
+
+        setupCloseButton();
+        document.getElementById('playerModal').style.display = "block";
+      } catch (error) {
+        console.error('Error loading media details:', error);
+      }
+    }
+
+    async function loadSeasonEpisodeSelector(tvShowId, seriesDetails) {
+      const seasons = await fetchTMDBData(`/tv/${tvShowId}`);
+      const selectorContainer = document.getElementById('seasonEpisodeSelector');
+      
+      const seasonSelect = document.createElement('select');
+      seasonSelect.id = 'seasonSelect';
+      seasons.seasons.forEach(season => {
+        const option = document.createElement('option');
+        option.value = season.season_number;
+        option.textContent = `Season ${season.season_number}`;
+        seasonSelect.appendChild(option);
+      });
+
+      const episodeSelect = document.createElement('select');
+      episodeSelect.id = 'episodeSelect';
+
+      const playEpisodeButtonServer1 = document.createElement('button');
+      playEpisodeButtonServer1.textContent = '▶ Watch on Server 1';
+      playEpisodeButtonServer1.className = 'video-button';
+      playEpisodeButtonServer1.id = 'playEpisodeButtonServer1';
+
+      const playEpisodeButtonServer2 = document.createElement('button');
+      playEpisodeButtonServer2.textContent = '▶ Watch on Server 2';
+      playEpisodeButtonServer2.className = 'video-button';
+      playEpisodeButtonServer2.id = 'playEpisodeButtonServer2';
+
+      selectorContainer.appendChild(seasonSelect);
+      selectorContainer.appendChild(episodeSelect);
+      selectorContainer.appendChild(playEpisodeButtonServer1);
+      selectorContainer.appendChild(playEpisodeButtonServer2);
+
+      seasonSelect.addEventListener('change', async () => {
+        const selectedSeason = seasonSelect.value;
+        const episodes = await fetchTMDBData(`/tv/${tvShowId}/season/${selectedSeason}`);
+        
+        episodeSelect.innerHTML = '';
+        episodes.episodes.forEach(episode => {
+          const option = document.createElement('option');
+          option.value = episode.episode_number;
+          option.textContent = `Episode ${episode.episode_number}`;
+          episodeSelect.appendChild(option);
+        });
+      });
+
+      playEpisodeButtonServer1.addEventListener('click', () => {
+        const selectedSeason = seasonSelect.value;
+        const selectedEpisode = episodeSelect.value;
+        const url = getVideoUrl('tv', seriesDetails, selectedSeason, selectedEpisode).server1;
+        loadVideo(url, seriesDetails);
+      });
+
+      playEpisodeButtonServer2.addEventListener('click', () => {
+        const selectedSeason = seasonSelect.value;
+        const selectedEpisode = episodeSelect.value;
+        const url = getVideoUrl('tv', seriesDetails, selectedSeason, selectedEpisode).server2;
+        loadVideo(url, seriesDetails);
+      });
+
+      seasonSelect.dispatchEvent(new Event('change'));
+    }
+
+    function getVideoUrl(mediaType, mediaDetails, season = null, episode = null) {
+      const servers = CONFIG.urls.videoServers;
+      
+      const getServer1Url = () => {
+        if (mediaType === 'movie') {
+          return `${servers.server1.base}${servers.server1.moviePath}${mediaDetails.id}`;
+        } else {
+          return `${servers.server1.base}${servers.server1.tvPath}${mediaDetails.id}-${season}-${episode}`;
+        }
+      };
+
+      const getServer2Url = () => {
+        if (mediaType === 'movie') {
+          return `${servers.server2.base}${servers.server2.moviePath}${mediaDetails.id}`;
+        } else {
+          return `${servers.server2.base}${servers.server2.tvPath}${mediaDetails.id}/${season}/${episode}`;
+        }
+      };
+
+      return {
+        server1: getServer1Url(),
+        server2: getServer2Url()
+      };
+    }
+
+    function loadVideo(url, mediaDetails = null) {
+      const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+      if (isMobile) {
+        window.open(url, '_system');
+        return;
+      }
+
+      const modalContent = document.querySelector('.modal-content');
+      modalContent.innerHTML = `
+        <span class="close">&times;</span>
+        <div class="video-container">
+          <iframe id="player" src="${url}" frameborder="0" allowfullscreen></iframe>
+        </div>
+      `;
+      setupCloseButton();
+
+      const player = document.getElementById('player');
+      player.addEventListener('load', function() {
+        try {
+          const closeButtons = player.contentDocument.querySelectorAll(
+            'button[class*="close"], ' + 
+            '.ad-close, ' + 
+            '.close-ad, ' + 
+            '[class*="advertisement"], ' + 
+            '[id*="advertisement"], ' +
+            '[class*="popup"], ' +
+            '[class*="banner"], ' +
+            '[id*="banner"]'
+          );
+          closeButtons.forEach(button => button.click());
+          
+          const adElements = player.contentDocument.querySelectorAll(
+            'iframe[src*="ad"], ' +
+            'div[id*="ad-"], ' +
+            'div[class*="ad-"], ' +
+            '.advertisement, ' +
+            '#advertisement'
+          );
+          adElements.forEach(el => el.remove());
+        } catch (e) {
+          console.log('Could not access iframe content due to security restrictions');
+        }
+      });
+
+      const adCheckInterval = setInterval(() => {
+        try {
+          const frame = document.getElementById('player');
+          if (frame && frame.contentWindow) {
+            const doc = frame.contentWindow.document;
+
+            const closeButtons = doc.querySelectorAll(
+              'button[class*="close"], ' +
+              '.ad-close, ' +
+              '.close-ad, ' +
+              '[class*="popup-close"], ' +
+              '[class*="overlay-close"]'
+            );
+            closeButtons.forEach(btn => btn.click());
+
+            const adElements = doc.querySelectorAll(
+              'iframe[src*="ad"], ' +
+              'div[id*="ad-"], ' +
+              'div[class*="ad-"], ' +
+              '.advertisement, ' +
+              '#advertisement, ' +
+              '[class*="popup"], ' +
+              '[class*="overlay"]'
+            );
+            adElements.forEach(el => el.remove());
+
+            const adStyles = doc.querySelectorAll('style[id*="ad"], link[href*="ads"]');
+            adStyles.forEach(style => style.remove());
+          }
+        } catch (e) {
+        }
+      }, 500);
+
+      const modal = document.getElementById('playerModal');
+      modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+          clearInterval(adCheckInterval);
+        }
+      });
+
+      document.querySelector('.close').addEventListener('click', () => {
+        clearInterval(adCheckInterval);
+      });
+    }
+
+    function setupCloseButton() {
+      const modal = document.getElementById('playerModal');
+      const closeBtn = modal.querySelector('.close');
+      
+      function closeModal() {
+        modal.style.display = "none";
+        const videoContainer = modal.querySelector('.video-container');
+        if (videoContainer) {
+          videoContainer.innerHTML = '<iframe id="player" frameborder="0" allowfullscreen></iframe>';
+        }
+      }
+      
+      if (closeBtn) {
+        closeBtn.onclick = closeModal;
+      }
+      
+      window.onclick = function(event) {
+        if (event.target == modal) {
+          closeModal();
+        }
+      }
+    }
+
+    async function searchMedia(query) {
+      const searchResults = await fetchTMDBData('/search/multi', { query: query });
+      const filteredResults = searchResults.results.filter(item => item.media_type === 'movie' || item.media_type === 'tv');
+      displayMedia(filteredResults, 'mediaGrid', 'multi', true);
+      isSearchMode = true;
+      currentPage = 1;
+      displayedMediaIds.clear();
+    }
+
+    async function loadGenres() {
+      try {
+        const movieGenres = await fetchTMDBData('/genre/movie/list');
+        const tvGenres = await fetchTMDBData('/genre/tv/list');
+        
+        const genreList = document.getElementById('genreList');
+        genreList.innerHTML = `
+          <li class="genre-header">Movie Categories</li>
+          ${movieGenres.genres.map(genre => 
+            `<li class="genre-item" data-type="movie" data-id="${genre.id}">${genre.name}</li>`
+          ).join('')}
+          <li class="genre-header">TV Show Categories</li>
+          ${tvGenres.genres.map(genre => 
+            `<li class="genre-item" data-type="tv" data-id="${genre.id}">${genre.name}</li>`
+          ).join('')}
+        `;
+        
+        genreList.querySelectorAll('.genre-item').forEach(item => {
+          item.addEventListener('click', () => {
+            loadGenreContent(item.dataset.id, item.dataset.type);
+          });
+        });
+      } catch (error) {
+        console.error('Error loading genres:', error);
+      }
+    }
+
+    async function loadGenreContent(genreId, mediaType) {
+      isLoading = true;
+      isSearchMode = true;
+      currentPage = 1;
+      
+      try {
+        const results = await fetchTMDBData(`/discover/${mediaType}`, { 
+          with_genres: genreId,
+          page: currentPage 
+        });
+        
+        displayMedia(results.results, 'mediaGrid', mediaType, true);
+      } catch (error) {
+        console.error('Error loading genre content:', error);
+      } finally {
+        isLoading = false;
+      }
+    }
+
+    function updateMediaQueryValues() {
+      document.documentElement.style.setProperty('--mobile-breakpoint', `${CONFIG.gridSettings.mobileBreakpoint}px`);
+    }
+
+    function isUserLoggedIn() {
+      return currentUser !== null;
+    }
+
+    function isAdmin(username) {
+      return username === 'lem';
+    }
+
+    function updateAuthButtons() {
+      const authNav = document.querySelector('.auth-nav');
+      if (currentUser) {
+        authNav.innerHTML = `
+          <span class="user-welcome">Welcome, ${currentUser}</span>
+          <button id="accountBtn" style="margin-right: 10px;">My Account</button>
+          ${isAdmin(currentUser) ? '<button id="adminBtn" style="margin-right: 10px;">Admin Panel</button>' : ''}
+          <button id="signOutBtn">Sign Out</button>
+        `;
+        document.getElementById('signOutBtn').addEventListener('click', signOut);
+        document.getElementById('accountBtn').addEventListener('click', openAccountPage);
+        if (isAdmin(currentUser)) {
+          document.getElementById('adminBtn').addEventListener('click', openAdminPanel);
+        }
+      } else {
+        authNav.innerHTML = `
+          <button id="loginBtn">Sign In</button>
+          <button id="registerBtn">Sign Up</button>
+        `;
+        document.getElementById('loginBtn').addEventListener('click', () => loginModal.style.display = 'block');
+        document.getElementById('registerBtn').addEventListener('click', () => registerModal.style.display = 'block');
+      }
+    }
+
+    function initAuth() {
+      const loginModal = document.getElementById('loginModal');
+      const registerModal = document.getElementById('registerModal');
+      const showRegister = document.getElementById('showRegister');
+      const showLogin = document.getElementById('showLogin');
+      const loginForm = document.getElementById('loginForm');
+      const registerForm = document.getElementById('registerForm');
+
+      updateAuthButtons();
+
+      showRegister.addEventListener('click', () => {
+        loginModal.style.display = 'none';
+        registerModal.style.display = 'block';
+      });
+      
+      showLogin.addEventListener('click', () => {
+        registerModal.style.display = 'none';
+        loginModal.style.display = 'block';
+      });
+
+      registerForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const username = document.getElementById('registerUsername').value;
+        const password = document.getElementById('registerPassword').value;
+        
+        try {
+          await set(ref(db, 'users/' + username), {
+            username: username,
+            password: password
+          });
+          alert('Registration successful!');
+          registerModal.style.display = 'none';
+        } catch (error) {
+          alert('Registration failed: ' + error.message);
+        }
+      });
+
+      loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const username = document.getElementById('loginUsername').value;
+        const password = document.getElementById('loginPassword').value;
+        await loginUser(username, password);
+      });
+
+      window.onclick = (event) => {
+        const loginModal = document.getElementById('loginModal');
+        const registerModal = document.getElementById('registerModal');
+        if (event.target === loginModal) {
+          loginModal.style.display = 'none';
+        }
+        if (event.target === registerModal) {
+          registerModal.style.display = 'none'; 
+        }
+      };
+    }
+
+    async function openAccountPage() {
+      const accountModal = document.getElementById('accountModal');
+      const closeBtn = accountModal.querySelector('.modal-close');
+      
+      document.getElementById('profileUsername').textContent = currentUser;
+      
+      try {
+        const snapshot = await get(child(ref(db), `subscriptions/${currentUser}`));
+        if (snapshot.exists()) {
+          const subscription = snapshot.val();
+          const now = Date.now();
+          const isActive = now < subscription.expirationTime;
+          
+          document.getElementById('currentPlan').textContent = subscription.plan;
+          
+          const statusSpan = document.getElementById('subscriptionStatus');
+          statusSpan.textContent = isActive ? 'Active' : 'Expired';
+          statusSpan.className = `subscription-status status-${isActive ? 'active' : 'expired'}`;
+          
+          const expiryDate = new Date(subscription.expirationTime);
+          document.getElementById('subscriptionExpiry').textContent = 
+            expiryDate.toLocaleDateString() + ' ' + expiryDate.toLocaleTimeString();
+        } else {
+          document.getElementById('currentPlan').textContent = 'No active subscription';
+          document.getElementById('subscriptionStatus').textContent = 'Not subscribed';
+          document.getElementById('subscriptionExpiry').textContent = '-';
+        }
+      } catch (error) {
+        console.error('Error fetching subscription details:', error);
+      }
+      
+      accountModal.style.display = 'block';
+      
+      closeBtn.onclick = () => accountModal.style.display = 'none';
+      
+      window.onclick = (event) => {
+        if (event.target === accountModal) {
+          accountModal.style.display = 'none';
+        }
+      };
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      updateMediaQueryValues();
+      
+      await set(ref(db, 'users/lem'), {
+        username: 'lem',
+        password: 'lem1234',
+        role: 'admin'
+      });
+      
+      initAuth();
+      startSubscriptionCheck();
+
+      const pricingButton = document.querySelector('.pricing-button');
+      const subscriptionModal = document.getElementById('subscriptionModal');
+      const subscriptionClose = subscriptionModal.querySelector('.modal-close');
+
+      function openGcashPayment(planName, planPrice) {
+        const gcashModal = document.getElementById('gcashPaymentModal');
+        const selectedPlan = document.getElementById('selectedPlan');
+        const selectedAmount = document.getElementById('selectedAmount');
+        const confirmBtn = document.getElementById('confirmPaymentBtn');
+        const fileInput = document.getElementById('paymentScreenshot');
+        const previewDiv = document.getElementById('uploadPreview');
+        
+        selectedPlan.textContent = planName;
+        selectedAmount.textContent = planPrice;
+        
+        gcashModal.style.display = 'block';
+        
+        const storage = getStorage();
+        
+        fileInput.addEventListener('change', async (e) => {
+          const file = e.target.files[0];
+          if (file) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+              previewDiv.innerHTML = `
+                <img src="${e.target.result}" alt="Payment Screenshot Preview">
+                <div class="loading-spinner" id="scanSpinner"></div>
+                <div class="scan-result" id="scanResult"></div>
+                <p class="upload-instructions">
+                  The system will verify your payment details through OCR scanning.
+                </p>
+              `;
+              analyzeImage(e.target.result);
+            };
+            reader.readAsDataURL(file);
+          }
+        });
+
+        async function checkReferenceNumber(referenceNumber) {
+          try {
+            const refsSnapshot = await get(child(ref(db), 'used_references'));
+            if (refsSnapshot.exists()) {
+              const usedRefs = Object.values(refsSnapshot.val());
+              return usedRefs.some(ref => ref.reference === referenceNumber);
+            }
+            return false;
+          } catch (error) {
+            console.error('Error checking reference number:', error);
+            return false;
+          }
+        }
+
+        async function analyzeImage(imageUrl) {
+          const spinner = document.getElementById('scanSpinner');
+          const resultDiv = document.getElementById('scanResult');
+          const confirmBtn = document.getElementById('confirmPaymentBtn');
+          
+          spinner.style.display = 'block';
+          resultDiv.innerHTML = 'Scanning payment details...';
+          confirmBtn.disabled = true;
+
+          const expectedAmount = document.getElementById('selectedAmount').textContent;
+          const expectedAmountValue = parseFloat(expectedAmount.replace(/[^\d.]/g, ''));
+
+          const dateRegex = /\b(?:Jan(?:uary)?|Feb(?:ruary)?|Mar(?:ch)?|Apr(?:il)?|May|Jun(?:e)?|Jul(?:y)?|Aug(?:ust)?|Sep(?:tember)?|Oct(?:ober)?|Nov(?:ember)?|Dec(?:ember)?)[^\n]*?(?:\d{1,2}(?:,|\s)\s*\d{4})\b/gi;
+          const timeRegex = /\d{1,2}:\d{2}\s*[AaPp][Mm]/;
+          const amountRegex = /(Amount|Total Amount Sent)[^\n]*?(?:[-])?(?:[\$\£\€\₱]|PHP|USD|EUR|GBP)?\s*\d+(?:,\d{3})*(?:\.\d{2})?/gi;
+          const phoneRegex = /(?:to|To|sent to)\s*(?:0*9560748741)/;
+
+          try {
+            const worker = await Tesseract.createWorker();
+            await worker.loadLanguage('eng');
+            await worker.initialize('eng');
+            const { data: { text } } = await worker.recognize(imageUrl);
+            await worker.terminate();
+
+            const lines = text.split('\n');
+            let referenceInfo = '';
+            let hasValidReference = false;
+
+            for(let i = 0; i < lines.length - 1; i++) {
+              const currentLine = lines[i].toLowerCase();
+              const nextLine = lines[i + 1];
+
+              if(timeRegex.test(currentLine) || timeRegex.test(nextLine)) {
+                continue;
+              }
+
+              if(currentLine.includes('8022') || currentLine.includes('6022')) {
+                referenceInfo = currentLine.trim();
+                const refMatch = currentLine.match(/(?:8022|6022)\s*\d{3}\s*\d{6}/);
+                if(refMatch) {
+                  referenceInfo = refMatch[0].replace(/\s+/g, '').trim();
+                  hasValidReference = true;
+                  break;
+                }
+              }
+            }
+
+            const dateMatch = text.match(dateRegex);
+            const timeMatch = text.match(timeRegex);
+            const amountMatch = text.match(amountRegex);
+            const phoneMatch = text.match(phoneRegex);
+
+            const today = new Date();
+            const scannedDate = dateMatch ? new Date(dateMatch[0]) : null;
+            const scannedAmount = amountMatch ? 
+              Math.abs(parseFloat(amountMatch[0].replace(/[^\d.]/g, ''))) : 0;
+            const isToday = scannedDate ? scannedDate.toDateString() === today.toDateString() : false;
+            const amountMatches = Math.abs(scannedAmount - expectedAmountValue) < 0.01;
+            const correctRecipient = phoneMatch !== null;
+            const isReferenceUsed = await checkReferenceNumber(referenceInfo);
+            const isValid = isToday && amountMatches && correctRecipient && hasValidReference && !isReferenceUsed;
+
+            resultDiv.innerHTML = `
+              <h4>Scanned Payment Details:</h4>
+              <p>Date: ${dateMatch ? dateMatch[0].trim() : 'Not found'}</p>
+              <p>Time: ${timeMatch ? timeMatch[0].trim() : 'Not found'}</p>
+              <p>Amount: ${amountMatch ? amountMatch[0].trim() : 'Not found'}</p>
+              <p>Reference: ${referenceInfo || 'Not found'}</p>
+              <p>Status: ${isValid ? 
+                '<span style="color: #4CAF50;">✓ Valid Payment</span>' : 
+                (isReferenceUsed ? 
+                  '<span style="color: #f44336;">✗ Reference number already used</span>' :
+                  '<span style="color: #f44336;">✗ Invalid Payment</span>')}</p>
+            `;
+
+            confirmBtn.disabled = !isValid;
+            spinner.style.display = 'none';
+
+            if (isValid) {
+              await set(ref(db, `used_references/${Date.now()}`), {
+                reference: referenceInfo,
+                user: currentUser,
+                timestamp: Date.now()
+              });
+
+              const storage = getStorage();
+              const imagePath = `payment_proofs/${currentUser}_${Date.now()}.jpg`;
+              const imageRef = storageRef(storage, imagePath);
+
+              const response = await fetch(imageUrl);
+              const blob = await response.blob();
+              await uploadBytes(imageRef, blob);
+
+              const planDetails = {
+                daily: { duration: 24 * 60 * 60 * 1000, price: 5 },
+                weekly: { duration: 7 * 24 * 60 * 60 * 1000, price: 35 },
+                monthly: { duration: 30 * 24 * 60 * 60 * 1000, price: 100 }
+              };
+              
+              let selectedPlanType;
+              if (selectedAmount.textContent.includes('5')) selectedPlanType = 'daily';
+              else if (selectedAmount.textContent.includes('35')) selectedPlanType = 'weekly';
+              else if (selectedAmount.textContent.includes('100')) selectedPlanType = 'monthly';
+              
+              const plan = planDetails[selectedPlanType];
+              const subscriptionData = {
+                plan: planName,
+                status: 'active',
+                startTime: Date.now(),
+                expirationTime: Date.now() + plan.duration,
+                paymentProof: imagePath,
+                amount: plan.price,
+                referenceNumber: referenceInfo
+              };
+              
+              await set(ref(db, `subscriptions/${currentUser}`), subscriptionData);
+            }
+
+          } catch (error) {
+            console.error('Error analyzing image:', error);
+            resultDiv.innerHTML = 'Error scanning payment details. Please try again.';
+            spinner.style.display = 'none';
+          }
+        }
+
+        confirmBtn.addEventListener('click', () => {
+          gcashModal.style.display = 'none';
+          subscriptionModal.style.display = 'none';
+          alert('Subscription activated successfully!');
+          location.reload();
+        });
+      }
+
+      const subscribeBtns = document.querySelectorAll('.subscribe-btn');
+      subscribeBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+          if (!isUserLoggedIn()) {
+            alert('Please log in first to subscribe');
+            document.getElementById('loginModal').style.display = 'block';
+            return;
+          }
+          const planName = btn.closest('.subscription-plan').querySelector('.plan-name').textContent;
+          const planPrice = btn.closest('.subscription-plan').querySelector('.plan-price').textContent;
+          subscriptionModal.style.display = 'none';
+          openGcashPayment(planName, planPrice);
+        });
+      });
+
+      pricingButton.addEventListener('click', () => {
+        subscriptionModal.style.display = 'block';
+      });
+
+      subscriptionClose.addEventListener('click', () => {
+        subscriptionModal.style.display = 'none';
+      });
+
+      window.addEventListener('click', (event) => {
+        if (event.target === subscriptionModal) {
+          subscriptionModal.style.display = 'none';
+        }
+      });
+
+      const gcashModal = document.getElementById('gcashPaymentModal');
+      const gcashCloseBtn = gcashModal.querySelector('.close');
+      gcashCloseBtn.addEventListener('click', () => {
+        gcashModal.style.display = 'none';
+      });
+
+      window.addEventListener('click', (event) => {
+        if (event.target === gcashModal) {
+          gcashModal.style.display = 'none';
+        }
+      });
+
+      await loadGenres();
+      
+      const sidebarToggle = document.querySelector('.sidebar-toggle');
+      const sidebar = document.querySelector('.sidebar');
+      sidebarToggle.addEventListener('click', () => {
+        sidebar.classList.toggle('open');
+      });
+      
+      document.getElementById('searchButton').addEventListener('click', () => {
+        const query = document.getElementById('searchInput').value;
+        if (query.trim()) {
+          searchMedia(query);
+        }
+      });
+      
+      document.getElementById('searchInput').addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+          const query = e.target.value;
+          if (query.trim()) {
+            searchMedia(query);
+          }
+        }
+      });
+
+      loadPopularMedia();
+      
+      window.addEventListener('scroll', () => {
+        if (!isLoading && !isSearchMode && 
+            window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 1000) {
+          loadPopularMedia();
+        }
+      });
+    });
+  </script>
+</body>
+</html>
